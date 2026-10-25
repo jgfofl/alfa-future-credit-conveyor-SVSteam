@@ -1,0 +1,466 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Credit Scoring & Decision Service",
+  "description": "ML-скоринг и кредитная логика для «Умного кредитного кабинета предпринимателя». Данные синтетические, интеграции смоделированы.",
+  "version": "1.0.0"
+ },
+ "paths": {
+  "/health": {
+   "get": {
+    "summary": "Health",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/model/info": {
+   "get": {
+    "summary": "Info",
+    "operationId": "info_v1_model_info_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/decision": {
+   "post": {
+    "summary": "Decision",
+    "operationId": "decision_v1_decision_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/Application"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Decision"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/company/{inn}": {
+   "get": {
+    "summary": "Company",
+    "description": "Mock EGRUL/EGRIP lookup used by the cabinet to prefill company data.",
+    "operationId": "company_v1_company__inn__get",
+    "parameters": [
+     {
+      "name": "inn",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Inn"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Application": {
+    "properties": {
+     "inn": {
+      "type": "string",
+      "maxLength": 12,
+      "minLength": 10,
+      "title": "Inn",
+      "examples": [
+       "7701234567"
+      ]
+     },
+     "product": {
+      "type": "string",
+      "enum": [
+       "working_capital",
+       "equipment",
+       "overdraft",
+       "investment"
+      ],
+      "title": "Product"
+     },
+     "req_amount": {
+      "type": "number",
+      "maximum": 50000000.0,
+      "minimum": 100000.0,
+      "title": "Req Amount",
+      "examples": [
+       2000000
+      ]
+     },
+     "req_term": {
+      "type": "integer",
+      "maximum": 60.0,
+      "minimum": 6.0,
+      "title": "Req Term",
+      "examples": [
+       24
+      ]
+     },
+     "revenue_12m": {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+      "title": "Revenue 12M",
+      "examples": [
+       18000000
+      ]
+     },
+     "profit_margin": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": -0.5,
+      "title": "Profit Margin",
+      "examples": [
+       0.15
+      ]
+     },
+     "debt_load": {
+      "type": "number",
+      "maximum": 5.0,
+      "minimum": 0.0,
+      "title": "Debt Load",
+      "description": "долг / годовая выручка",
+      "examples": [
+       0.2
+      ]
+     },
+     "age_months": {
+      "type": "integer",
+      "minimum": 0.0,
+      "title": "Age Months",
+      "examples": [
+       48
+      ]
+     },
+     "employees": {
+      "type": "integer",
+      "minimum": 1.0,
+      "title": "Employees",
+      "examples": [
+       12
+      ]
+     },
+     "avg_balance_ratio": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Avg Balance Ratio",
+      "description": "средний остаток / выручка",
+      "examples": [
+       0.12
+      ]
+     },
+     "revenue_volatility": {
+      "type": "number",
+      "maximum": 3.0,
+      "minimum": 0.0,
+      "title": "Revenue Volatility",
+      "description": "коэффициент вариации месячной выручки",
+      "examples": [
+       0.2
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "inn",
+     "product",
+     "req_amount",
+     "req_term",
+     "revenue_12m",
+     "profit_margin",
+     "debt_load",
+     "age_months",
+     "employees",
+     "avg_balance_ratio",
+     "revenue_volatility"
+    ],
+    "title": "Application"
+   },
+   "Decision": {
+    "properties": {
+     "decision": {
+      "type": "string",
+      "enum": [
+       "approved",
+       "counteroffer",
+       "rejected",
+       "need_info",
+       "manual_review"
+      ],
+      "title": "Decision"
+     },
+     "reasons": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Reasons",
+      "default": []
+     },
+     "pd": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pd"
+     },
+     "score": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Score"
+     },
+     "grade": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grade"
+     },
+     "payment_to_income": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Payment To Income"
+     },
+     "offer": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Offer"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "risk_factors": {
+      "items": {
+       "$ref": "#/components/schemas/Factor"
+      },
+      "type": "array",
+      "title": "Risk Factors",
+      "default": []
+     },
+     "trace": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Trace",
+      "default": []
+     },
+     "model_version": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Version"
+     },
+     "rules_version": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rules Version"
+     }
+    },
+    "type": "object",
+    "required": [
+     "decision"
+    ],
+    "title": "Decision"
+   },
+   "Factor": {
+    "properties": {
+     "factor": {
+      "type": "string",
+      "title": "Factor"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     },
+     "contribution": {
+      "type": "number",
+      "title": "Contribution"
+     }
+    },
+    "type": "object",
+    "required": [
+     "factor",
+     "text",
+     "contribution"
+    ],
+    "title": "Factor"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "Offer": {
+    "properties": {
+     "amount": {
+      "type": "number",
+      "title": "Amount"
+     },
+     "term": {
+      "type": "integer",
+      "title": "Term"
+     },
+     "rate": {
+      "type": "number",
+      "title": "Rate"
+     },
+     "payment": {
+      "type": "number",
+      "title": "Payment"
+     }
+    },
+    "type": "object",
+    "required": [
+     "amount",
+     "term",
+     "rate",
+     "payment"
+    ],
+    "title": "Offer"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}

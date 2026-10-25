@@ -1,0 +1,10 @@
+services:
+  scoring:
+    build: .
+    ports: ["8000:8000"]        # Swagger: http://localhost:8000/docs
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    ports: ["8080:80"]          # кабинеты: http://localhost:8080
+    depends_on: [scoring]
+    restart: unless-stopped

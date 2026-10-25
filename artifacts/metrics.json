@@ -1,0 +1,30 @@
+{
+ "auc": 0.7908,
+ "gini": 0.5816,
+ "ks": 0.4635,
+ "brier": 0.0721,
+ "n_train": 15000,
+ "n_test": 5000,
+ "default_rate": 0.0916,
+ "coefficients_std": {
+  "revenue_12m": -0.7029,
+  "profit_margin": -0.2196,
+  "debt_load": 0.4328,
+  "age_months": -0.3842,
+  "employees": 0.0284,
+  "avg_balance_ratio": -0.2246,
+  "revenue_volatility": 0.1431,
+  "req_amount": 0.2512,
+  "req_term": 0.0312,
+  "bki_delinq_cnt": 0.2429,
+  "bki_max_dpd": 0.6334,
+  "bki_active_loans": -0.0452,
+  "bki_history_months": 0.0119,
+  "amount_to_revenue": 0.1608,
+  "payment_to_income": -0.0076,
+  "org_OOO": -0.1537,
+  "prod_equipment": -0.0212,
+  "prod_overdraft": -0.0297,
+  "prod_investment": 0.1774
+ }
+}

@@ -1,0 +1,137 @@
+{
+ "info": {
+  "name": "Credit Scoring",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "variable": [
+  {
+   "key": "base",
+   "value": "http://localhost:8000"
+  }
+ ],
+ "item": [
+  {
+   "name": "health",
+   "request": {
+    "method": "GET",
+    "url": "{{base}}/health"
+   }
+  },
+  {
+   "name": "model info",
+   "request": {
+    "method": "GET",
+    "url": "{{base}}/v1/model/info"
+   }
+  },
+  {
+   "name": "company lookup (mock EGRUL)",
+   "request": {
+    "method": "GET",
+    "url": "{{base}}/v1/company/7701234567"
+   }
+  },
+  {
+   "name": "approved",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"7701234567\", \"product\": \"working_capital\", \"req_amount\": 2000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 48, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  },
+  {
+   "name": "counteroffer",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"7701234567\", \"product\": \"working_capital\", \"req_amount\": 9000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 48, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  },
+  {
+   "name": "rejected: liquidated",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"7701234500\", \"product\": \"working_capital\", \"req_amount\": 2000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 48, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  },
+  {
+   "name": "manual_review: bureau down",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"7701234599\", \"product\": \"working_capital\", \"req_amount\": 2000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 48, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  },
+  {
+   "name": "need_info: bad INN",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"abc1234567\", \"product\": \"working_capital\", \"req_amount\": 2000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 48, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  },
+  {
+   "name": "rejected: young business",
+   "request": {
+    "method": "POST",
+    "url": "{{base}}/v1/decision",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "body": {
+     "mode": "raw",
+     "raw": "{\"inn\": \"7701234567\", \"product\": \"working_capital\", \"req_amount\": 2000000, \"req_term\": 24, \"revenue_12m\": 18000000, \"profit_margin\": 0.15, \"debt_load\": 0.2, \"age_months\": 3, \"employees\": 12, \"avg_balance_ratio\": 0.12, \"revenue_volatility\": 0.2}"
+    }
+   }
+  }
+ ]
+}
